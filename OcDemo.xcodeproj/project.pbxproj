@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0495BB3AB741B12FC553BE93 /* libPods-OcDemo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AA00478ED1679F1A1212E866 /* libPods-OcDemo.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -31,9 +30,6 @@
 		80B60E072F14FAB90042B78D /* OcDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OcDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		80B60E252F14FABA0042B78D /* OcDemoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OcDemoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		80B60E2F2F14FABA0042B78D /* OcDemoUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OcDemoUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		9D3574B2EE264D96C8A0B866 /* Pods-OcDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OcDemo.release.xcconfig"; path = "Target Support Files/Pods-OcDemo/Pods-OcDemo.release.xcconfig"; sourceTree = "<group>"; };
-		AA00478ED1679F1A1212E866 /* libPods-OcDemo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OcDemo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		B278CEAA5165ACBD42C75E6A /* Pods-OcDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OcDemo.debug.xcconfig"; path = "Target Support Files/Pods-OcDemo/Pods-OcDemo.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -72,7 +68,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0495BB3AB741B12FC553BE93 /* libPods-OcDemo.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -93,23 +88,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		36A66CF739DE7E041CC042C3 /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				B278CEAA5165ACBD42C75E6A /* Pods-OcDemo.debug.xcconfig */,
-				9D3574B2EE264D96C8A0B866 /* Pods-OcDemo.release.xcconfig */,
-			);
-			path = Pods;
-			sourceTree = "<group>";
-		};
-		641EF176F5B6DA201333E310 /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				AA00478ED1679F1A1212E866 /* libPods-OcDemo.a */,
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
 		80B60DFE2F14FAB90042B78D = {
 			isa = PBXGroup;
 			children = (
@@ -117,8 +95,6 @@
 				80B60E282F14FABA0042B78D /* OcDemoTests */,
 				80B60E322F14FABA0042B78D /* OcDemoUITests */,
 				80B60E082F14FAB90042B78D /* Products */,
-				36A66CF739DE7E041CC042C3 /* Pods */,
-				641EF176F5B6DA201333E310 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -139,7 +115,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 80B60E382F14FABA0042B78D /* Build configuration list for PBXNativeTarget "OcDemo" */;
 			buildPhases = (
-				B541D1112E200871C495C5FB /* [CP] Check Pods Manifest.lock */,
 				80B60E032F14FAB90042B78D /* Sources */,
 				80B60E042F14FAB90042B78D /* Frameworks */,
 				80B60E052F14FAB90042B78D /* Resources */,
@@ -266,28 +241,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		B541D1112E200871C495C5FB /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-OcDemo-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -330,7 +283,6 @@
 /* Begin XCBuildConfiguration section */
 		80B60E392F14FABA0042B78D /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B278CEAA5165ACBD42C75E6A /* Pods-OcDemo.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -358,7 +310,6 @@
 		};
 		80B60E3A2F14FABA0042B78D /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 9D3574B2EE264D96C8A0B866 /* Pods-OcDemo.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
