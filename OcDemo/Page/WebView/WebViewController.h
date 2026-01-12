@@ -1,16 +1,5 @@
-//
-//  WebViewController.h
-//  OcDemo
-//
-//  Created by cwq on 2026/1/12.
-//
+#import <UIKit/UIKit.h>
 
-#import <Foundation/Foundation.h>
-
-NS_ASSUME_NONNULL_BEGIN
-
-@interface WebViewController : NSObject
+@interface WebViewController : UIViewController
 
 @end
-
-NS_ASSUME_NONNULL_END

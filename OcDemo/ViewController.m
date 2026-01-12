@@ -7,6 +7,7 @@
 
 #import "ViewController.h"
 #import "ToastUtil.h"
+#import "Page/WebView/WebViewController.h"
 
 
 @interface ModuleItem : NSObject
@@ -74,7 +75,9 @@
         [self itemWithTitle:@"WebView" action:^{
             __strong typeof(weakSelf) strongSelf = weakSelf;
             if (!strongSelf) return;
-            [ToastUtil showToastWithMessage:@"WebView"];
+            UIViewController *vc = [WebViewController new];
+                vc.title = @"WebView 示例";
+                [strongSelf.navigationController pushViewController:vc animated:YES];
         }],
         [self itemWithTitle:@"ListView" action:^{
             __strong typeof(weakSelf) strongSelf = weakSelf;
