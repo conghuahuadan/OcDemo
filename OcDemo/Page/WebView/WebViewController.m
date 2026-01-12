@@ -65,6 +65,7 @@
 
 @interface WebViewController ()
 @property (nonatomic, strong) WKWebView *webView;
+@property (nonatomic, strong) NSLayoutConstraint *webViewBottomConstraint;
 @end
 
 @implementation WebViewController
@@ -85,11 +86,20 @@
     [self.view addSubview:testButton];
 
     UILayoutGuide *guide = self.view.safeAreaLayoutGuide;
+    
+    self.webViewBottomConstraint = [self.webView.bottomAnchor constraintEqualToAnchor:guide.bottomAnchor];
+    self.webViewBottomConstraint.active = YES;
+    
     [NSLayoutConstraint activateConstraints:@[
-        [self.webView.topAnchor constraintEqualToAnchor:guide.topAnchor],
-        [self.webView.leadingAnchor constraintEqualToAnchor:guide.leadingAnchor],
-        [self.webView.trailingAnchor constraintEqualToAnchor:guide.trailingAnchor],
-        [self.webView.bottomAnchor constraintEqualToAnchor:guide.bottomAnchor],
+         [self.webView.topAnchor constraintEqualToAnchor:guide.topAnchor],
+         [self.webView.leadingAnchor constraintEqualToAnchor:guide.leadingAnchor],
+         [self.webView.trailingAnchor constraintEqualToAnchor:guide.trailingAnchor],
+         // [self.webView.bottomAnchor constraintEqualToAnchor:guide.bottomAnchor],
+
+//        [self.webView.topAnchor constraintEqualToAnchor:guide.topAnchor],
+//        [self.webView.leadingAnchor constraintEqualToAnchor:guide.leadingAnchor],
+//        [self.webView.trailingAnchor constraintEqualToAnchor:guide.trailingAnchor],
+//        [self.webView.heightAnchor constraintEqualToConstant:5000],
         [testButton.leadingAnchor constraintEqualToAnchor:guide.leadingAnchor constant:16.0],
         [testButton.bottomAnchor constraintEqualToAnchor:guide.bottomAnchor constant:-16.0]
     ]];
@@ -173,40 +183,97 @@
 }
 
 - (void)takeOfficialSnapshot {
-    [ToastUtil showToastWithMessage:@"开始截屏(官方API)..."];
+    [ToastUtil showToastWithMessage:@"开始截屏(长图)..."];
     
-    WKSnapshotConfiguration *config = [[WKSnapshotConfiguration alloc] init];
-    config.rect = CGRectNull; // 默认截取可视区域
-    config.afterScreenUpdates = YES;
+    UIScrollView *scrollView = self.webView.scrollView;
+    CGSize contentSize = scrollView.contentSize;
     
-    [self.webView takeSnapshotWithConfiguration:config completionHandler:^(UIImage * _Nullable snapshotImage, NSError * _Nullable error) {
-        if (snapshotImage) {
-            NSData *imageData = UIImagePNGRepresentation(snapshotImage);
-            if (!imageData) {
-                NSLog(@"图片转换失败");
-                [ToastUtil showToastWithMessage:@"图片保存失败"];
+    if (contentSize.width <= 0 || contentSize.height <= 0) {
+        NSLog(@"内容尺寸无效: %@", NSStringFromCGSize(contentSize));
+        [ToastUtil showToastWithMessage:@"内容还没加载完，稍后再试"];
+        return;
+    }
+    
+    // 记录原始 frame 和 contentOffset，方便还原
+    CGRect oldFrame = self.webView.frame;
+    CGPoint oldOffset = scrollView.contentOffset;
+    
+    // 以内容高度为主，宽度优先用当前 frame 宽度
+    CGFloat snapshotWidth = CGRectGetWidth(oldFrame);
+    if (snapshotWidth <= 0) {
+        snapshotWidth = contentSize.width;
+    }
+    CGFloat snapshotHeight = contentSize.height;
+    
+    // 临时把 webView 拉到整页高度，类似 mainWeb.frame = contentSize.height 的做法
+    self.webViewBottomConstraint.active = NO;
+    NSLayoutConstraint *heightConstraint = [self.webView.heightAnchor constraintEqualToConstant:snapshotHeight];
+    heightConstraint.active = YES;
+    [self.view layoutIfNeeded];
+
+    
+    // 处理掉 position:fixed 元素，避免长图里多次重复
+    [self handleFixedElements:^{
+        // 略微延迟一下，确保布局和隐藏操作都生效
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            
+            UIGraphicsBeginImageContextWithOptions(CGSizeMake(snapshotWidth, snapshotHeight), YES, 0);
+            CGContextRef ctx = UIGraphicsGetCurrentContext();
+            if (!ctx) {
+                NSLog(@"创建图片上下文失败");
+                [ToastUtil showToastWithMessage:@"截图失败"];
+                
+                // 还原
+                heightConstraint.active = NO;
+                self.webViewBottomConstraint.active = YES;
+                [self.view layoutIfNeeded];
+
+                scrollView.contentOffset = oldOffset;
+                [self restoreFixedElements];
                 return;
             }
             
-            NSString *fileName = [NSString stringWithFormat:@"official_screenshot_%@.png", @((long)[[NSDate date] timeIntervalSince1970])];
-            NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-            NSString *documentsDirectory = [paths firstObject];
-            NSString *filePath = [documentsDirectory stringByAppendingPathComponent:fileName];
+            // 核心：直接把整个 webView 的 layer 渲染到位图中，类似 yhViewTurnToImage
+            [self.webView.layer renderInContext:ctx];
+            UIImage *snapshotImage = UIGraphicsGetImageFromCurrentImageContext();
+            UIGraphicsEndImageContext();
             
-            NSError *writeError = nil;
-            BOOL success = [imageData writeToFile:filePath options:NSDataWritingAtomic error:&writeError];
+            // 还原 frame 和滚动位置、fixed 元素
+            heightConstraint.active = NO;
+            self.webViewBottomConstraint.active = YES;
+            [self.view layoutIfNeeded];
+
+            scrollView.contentOffset = oldOffset;
+            [self restoreFixedElements];
             
-            if (success) {
-                NSLog(@"截图已保存到路径: %@", filePath);
-                [ToastUtil showToastWithMessage:@"已保存到应用沙盒"];
+            if (snapshotImage) {
+                NSData *imageData = UIImagePNGRepresentation(snapshotImage);
+                if (!imageData) {
+                    NSLog(@"图片转换失败");
+                    [ToastUtil showToastWithMessage:@"图片保存失败"];
+                    return;
+                }
+                
+                NSString *fileName = [NSString stringWithFormat:@"official_screenshot_%@.png", @((long)[[NSDate date] timeIntervalSince1970])];
+                NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+                NSString *documentsDirectory = [paths firstObject];
+                NSString *filePath = [documentsDirectory stringByAppendingPathComponent:fileName];
+                
+                NSError *writeError = nil;
+                BOOL success = [imageData writeToFile:filePath options:NSDataWritingAtomic error:&writeError];
+                
+                if (success) {
+                    NSLog(@"截图已保存到路径: %@", filePath);
+                    [ToastUtil showToastWithMessage:@"已保存到应用沙盒"];
+                } else {
+                    NSLog(@"保存文件失败: %@", writeError.localizedDescription);
+                    [ToastUtil showToastWithMessage:@"保存失败"];
+                }
             } else {
-                NSLog(@"保存文件失败: %@", writeError.localizedDescription);
-                [ToastUtil showToastWithMessage:@"保存失败"];
+                NSLog(@"截图失败：生成图片为空");
+                [ToastUtil showToastWithMessage:@"截图失败"];
             }
-        } else {
-            NSLog(@"截图失败: %@", error.localizedDescription);
-            [ToastUtil showToastWithMessage:@"截图失败"];
-        }
+        });
     }];
 }
 
