@@ -1,0 +1,54 @@
+# Xcode user data
+*.xcuserstate
+*.xccheckout
+*.xcscmblueprint
+xcuserdata/
+DerivedData/
+build/
+
+# Swift/Objective-C package managers
+# CocoaPods
+Pods/
+# Carthage
+Carthage/Build/
+# SwiftPM
+.swiftpm/
+# Accio
+Dependencies/
+
+# iOS/macOS artifacts
+*.ipa
+*.dSYM
+*.dSYM.zip
+
+# Archives
+*.xcarchive
+
+# Playgrounds
+timeline.xctimeline
+playground.xcworkspace
+
+# User-specific
+*.orig
+*.rej
+*.tmp
+*.temp
+*.swp
+.DS_Store
+
+# Fastlane
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots
+fastlane/test_output
+
+# App-specific secrets/config
+#.env
+#.env.*
+# Uncomment above if you store env files locally and never commit
+
+# Xcode 12+ index and source packages cache
+SourcePackages/
+.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/
+
+Podfile.lock
