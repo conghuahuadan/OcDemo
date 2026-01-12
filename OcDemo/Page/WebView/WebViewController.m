@@ -134,7 +134,7 @@
     [self.webView evaluateJavaScript:js completionHandler:nil];
 }
 
-- (void)testButtonTapped {
+- (void)takeScrollScreenshot {
     [ToastUtil showToastWithMessage:@"开始截屏..."];
     
     [self handleFixedElements:^{
@@ -170,6 +170,49 @@
             }
         }];
     }];
+}
+
+- (void)takeOfficialSnapshot {
+    [ToastUtil showToastWithMessage:@"开始截屏(官方API)..."];
+    
+    WKSnapshotConfiguration *config = [[WKSnapshotConfiguration alloc] init];
+    config.rect = CGRectNull; // 默认截取可视区域
+    config.afterScreenUpdates = YES;
+    
+    [self.webView takeSnapshotWithConfiguration:config completionHandler:^(UIImage * _Nullable snapshotImage, NSError * _Nullable error) {
+        if (snapshotImage) {
+            NSData *imageData = UIImagePNGRepresentation(snapshotImage);
+            if (!imageData) {
+                NSLog(@"图片转换失败");
+                [ToastUtil showToastWithMessage:@"图片保存失败"];
+                return;
+            }
+            
+            NSString *fileName = [NSString stringWithFormat:@"official_screenshot_%@.png", @((long)[[NSDate date] timeIntervalSince1970])];
+            NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+            NSString *documentsDirectory = [paths firstObject];
+            NSString *filePath = [documentsDirectory stringByAppendingPathComponent:fileName];
+            
+            NSError *writeError = nil;
+            BOOL success = [imageData writeToFile:filePath options:NSDataWritingAtomic error:&writeError];
+            
+            if (success) {
+                NSLog(@"截图已保存到路径: %@", filePath);
+                [ToastUtil showToastWithMessage:@"已保存到应用沙盒"];
+            } else {
+                NSLog(@"保存文件失败: %@", writeError.localizedDescription);
+                [ToastUtil showToastWithMessage:@"保存失败"];
+            }
+        } else {
+            NSLog(@"截图失败: %@", error.localizedDescription);
+            [ToastUtil showToastWithMessage:@"截图失败"];
+        }
+    }];
+}
+
+- (void)testButtonTapped {
+    // [self takeScrollScreenshot];
+    [self takeOfficialSnapshot];
 }
 
 @end
