@@ -1,15 +1,11 @@
-//
-//  WebViewPrintPageRenderer.h
-//  OcDemo
-//
-//  Created by cwq on 2026/1/13.
-//
-
-#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface WebViewPrintPageRenderer : NSObject
+@interface WebViewPrintPageRenderer : UIPrintPageRenderer
+
+- (instancetype)initWithFormatter:(UIPrintFormatter *)formatter contentSize:(CGSize)contentSize;
+- (UIImage * _Nullable)printContentToImage;
 
 @end
 
