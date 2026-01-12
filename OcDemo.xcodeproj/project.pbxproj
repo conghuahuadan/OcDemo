@@ -57,15 +57,11 @@
 		};
 		80B60E282F14FABA0042B78D /* OcDemoTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-			);
 			path = OcDemoTests;
 			sourceTree = "<group>";
 		};
 		80B60E322F14FABA0042B78D /* OcDemoUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-			);
 			path = OcDemoUITests;
 			sourceTree = "<group>";
 		};
@@ -103,7 +99,6 @@
 				B278CEAA5165ACBD42C75E6A /* Pods-OcDemo.debug.xcconfig */,
 				9D3574B2EE264D96C8A0B866 /* Pods-OcDemo.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};

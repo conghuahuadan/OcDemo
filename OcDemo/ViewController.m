@@ -6,6 +6,8 @@
 //
 
 #import "ViewController.h"
+#import "ToastUtil.h"
+
 
 @interface ModuleItem : NSObject
 @property (nonatomic, copy) NSString *title;
@@ -72,12 +74,12 @@
         [self itemWithTitle:@"WebView" action:^{
             __strong typeof(weakSelf) strongSelf = weakSelf;
             if (!strongSelf) return;
-            NSLog(@"点击WebView");
+            [ToastUtil showToastWithMessage:@"WebView"];
         }],
         [self itemWithTitle:@"ListView" action:^{
             __strong typeof(weakSelf) strongSelf = weakSelf;
             if (!strongSelf) return;
-            [strongSelf showToastWithMessage:@"点击ListView"];
+            [ToastUtil showToastWithMessage:@"ListView"];
         }],
     ];
 

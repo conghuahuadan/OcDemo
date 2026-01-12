@@ -1,12 +1,8 @@
-//
-//  ToastUtil.h
-//  OcDemo
-//
-//  Created by cwq on 2026/1/12.
-//
+#import <UIKit/UIKit.h>
 
-#ifndef ToastUtil_h
-#define ToastUtil_h
+@interface ToastUtil : NSObject
 
+/// 显示一条全局 Toast
++ (void)showToastWithMessage:(NSString *)message;
 
-#endif /* ToastUtil_h */
+@end
